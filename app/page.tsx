@@ -160,59 +160,75 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-sky-50 flex items-start justify-center py-12 px-4">
       <div className="w-full max-w-4xl">
-        {/* 상단 헤더 */}
+        {/* 상단 헤더 (그라데이션 스타일) */}
         <header className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-white rounded-full p-2 shadow-sm">
-              <div className="w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold">PR</div>
+          <div className="flex items-center gap-4">
+            <div className="rounded-full p-2 bg-gradient-to-tr from-sky-400 to-sky-600 shadow-md">
+              <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white font-bold">PR</div>
             </div>
             <div>
-              <div className="text-xl font-semibold">장소 추천</div>
-              <div className="text-xs text-sky-700">솔직한 후기 기반</div>
+              <div className="text-2xl font-extrabold text-sky-800 tracking-tight">장소 추천</div>
+              <div className="text-sm text-sky-600">현실 후기 기반, 취향 맞춤</div>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <input placeholder="장소 검색" className="hidden sm:inline-block w-64 px-3 py-2 rounded-full border border-sky-200 bg-white shadow-sm focus:outline-none" />
-            <button className="bg-white text-sky-600 px-3 py-2 rounded-full shadow-sm">로그인</button>
+            <div className="relative">
+              <input placeholder="지역/키워드 검색" className="hidden sm:inline-block w-64 px-4 py-2 rounded-full border border-sky-100 bg-white shadow-sm focus:outline-none" />
+              <button className="ml-2 bg-white text-sky-600 px-3 py-2 rounded-full shadow-sm">로그인</button>
+            </div>
           </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <section className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h2 className="text-lg font-medium mb-3">추천 장소</h2>
-              <div className="space-y-4">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-medium mb-3">오늘의 추천</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {recommended.map(place => (
-                  <div key={place.id} className="p-4 border border-sky-100 rounded-xl hover:shadow-md flex items-start gap-4">
-                    <div className="w-14 h-14 bg-sky-100 rounded-lg flex items-center justify-center text-sky-600 font-semibold">{place.name.charAt(0)}</div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold">{place.name}</h3>
-                          <p className="text-xs text-sky-600">{place.category} • {place.location}</p>
+                  <article key={place.id} className="relative overflow-hidden rounded-xl p-4 bg-gradient-to-br from-white to-sky-50 border border-sky-100 hover:translate-y-[-4px] transition-transform">
+                    <div className="flex items-start gap-3">
+                      <div className="w-16 h-16 bg-sky-100 rounded-2xl flex items-center justify-center text-sky-600 font-bold text-lg">{place.name.charAt(0)}</div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <h3 className="font-bold text-sky-800">{place.name}</h3>
+                            <p className="text-xs text-sky-500">{place.category} • {place.location}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-bold text-sky-700">{place.avgRating.toFixed(1)} ★</div>
+                            <div className="text-xs text-sky-400">신뢰도 {place.avgTrust.toFixed(0)}</div>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm font-semibold text-sky-700">{place.avgRating.toFixed(1)} ★</div>
-                          <div className="text-xs text-sky-400">신뢰도 {place.avgTrust.toFixed(0)}</div>
+                        <p className="text-sm text-sky-600 mt-2">{place.description}</p>
+                        <div className="mt-3 flex items-center gap-2">
+                          <span className="text-xs bg-sky-100 text-sky-700 px-2 py-1 rounded-full">#숨은맛집</span>
+                          <span className="text-xs bg-sky-100 text-sky-700 px-2 py-1 rounded-full">#조용한카페</span>
                         </div>
                       </div>
-                      <p className="text-sm text-sky-600 mt-2">{place.description}</p>
                     </div>
-                  </div>
+                    <div className="absolute right-3 bottom-3">
+                      <button className="bg-sky-600 text-white px-3 py-1 rounded-full text-sm">자세히 보기</button>
+                    </div>
+                  </article>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h2 className="text-lg font-medium mb-3">장소 목록</h2>
-              <div className="space-y-3">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
+              <h2 className="text-lg font-medium mb-3">근처 핫플</h2>
+              <div className="grid grid-cols-1 gap-3">
                 {samplePlaces.map((place) => (
-                  <div key={place.id} className="p-3 rounded-lg border border-sky-50 flex items-center gap-4">
-                    <img src={place.reviews[0]?.photoUrl || '/file.svg'} alt={`${place.name} 대표 이미지`} className="w-14 h-14 rounded-lg object-cover" />
+                  <div key={place.id} className="p-3 rounded-xl border border-sky-50 flex items-center gap-4 hover:shadow-md transition-shadow">
+                    <div className="w-14 h-14 rounded-lg overflow-hidden bg-sky-100 flex items-center justify-center">
+                      <img src={place.reviews[0]?.photoUrl || '/file.svg'} alt={`${place.name} 대표 이미지`} className="w-full h-full object-cover" />
+                    </div>
                     <div className="flex-1">
                       <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-sky-800">{place.name}</h3>
+                        <div>
+                          <h3 className="font-semibold text-sky-800">{place.name}</h3>
+                          <p className="text-xs text-sky-500">{place.category}</p>
+                        </div>
                         <div className="text-sm text-sky-500">{(reviews[place.id] || []).length} 후기</div>
                       </div>
                       <p className="text-sm text-sky-600 mt-1">{place.description}</p>
@@ -224,9 +240,16 @@ export default function Page() {
           </section>
 
           <aside className="space-y-6">
-            <div className="bg-white rounded-2xl shadow p-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <h2 className="text-lg font-medium mb-3">후기 작성</h2>
               <form onSubmit={handleAddReview} className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-semibold">U</div>
+                  <div className="flex-1">
+                    <input type="text" placeholder="닉네임" value={user} onChange={e => setUser(e.target.value)} className="w-full border rounded-lg px-3 py-2" />
+                  </div>
+                </div>
+
                 <label className="block text-sm text-sky-600">장소</label>
                 <select value={selectedPlaceId} onChange={e => setSelectedPlaceId(Number(e.target.value))} className="w-full border rounded-lg px-3 py-2">
                   {samplePlaces.map(place => (
@@ -235,17 +258,15 @@ export default function Page() {
                 </select>
 
                 <div className="flex gap-2">
-                  <input type="text" placeholder="닉네임" value={user} onChange={e => setUser(e.target.value)} className="flex-1 border rounded-lg px-3 py-2" />
                   <input type="number" min={1} max={5} placeholder="평점" value={rating} onChange={e => setRating(Number(e.target.value))} className="w-20 border rounded-lg px-3 py-2" />
+                  <input type="text" placeholder="사진 파일명 (예: file.svg)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="flex-1 border rounded-lg px-3 py-2" />
                 </div>
-
-                <input type="text" placeholder="사진 파일명 (예: file.svg)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="w-full border rounded-lg px-3 py-2" />
 
                 <textarea placeholder="후기 내용을 작성해 주세요" value={text} onChange={e => setText(e.target.value)} className="w-full border rounded-lg px-3 py-2" rows={4} />
 
                 {error && <div className="text-red-500 text-sm">{error}</div>}
 
-                <button type="submit" className="w-full bg-sky-600 hover:bg-sky-700 text-white rounded-lg py-2">등록</button>
+                <button type="submit" className="w-full bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 text-white rounded-full py-2 shadow">등록</button>
               </form>
             </div>
           </aside>
