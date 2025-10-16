@@ -158,68 +158,84 @@ export default function Page() {
   const recommended = getRecommendedPlaces(reviews, samplePlaces);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-2xl font-bold mb-6">진정성 있는 장소 추천</h1>
-      <div className="w-full max-w-2xl">
-        {/* 추천 장소 섹션 */}
-        <section className="border rounded-lg p-4 mb-8 bg-green-50">
-          <h2 className="text-lg font-semibold mb-2 text-green-700">추천 장소 TOP 2</h2>
-          {recommended.map(place => (
-            <div key={place.id} className="mb-4">
-              <h3 className="text-md font-bold">{place.name} <span className="text-xs text-gray-500">({place.category})</span></h3>
-              <p className="text-gray-700">{place.location}</p>
-              <p className="text-gray-600">{place.description}</p>
-              <p className="text-xs mt-1">평균 신뢰도: {place.avgTrust.toFixed(1)} / 평균 평점: {place.avgRating.toFixed(1)}</p>
-            </div>
-          ))}
-        </section>
+    <main className="min-h-screen bg-gray-50 flex items-start justify-center py-12 px-4">
+      <div className="w-full max-w-3xl">
+        <header className="mb-6 flex items-center justify-between">
+          <h1 className="text-3xl font-semibold">장소 추천</h1>
+          <p className="text-sm text-gray-500">솔직한 후기 기반의 간단한 추천</p>
+        </header>
 
-        {/* 후기 작성 폼 */}
-        <form onSubmit={handleAddReview} className="border rounded-lg p-4 mb-8 bg-gray-50">
-          <h2 className="text-lg font-semibold mb-2">후기 작성</h2>
-          <div className="mb-2">
-            <label className="mr-2">장소 선택:</label>
-            <select value={selectedPlaceId} onChange={e => setSelectedPlaceId(Number(e.target.value))} className="border p-1 rounded">
-              {samplePlaces.map(place => (
-                <option key={place.id} value={place.id}>{place.name}</option>
-              ))}
-            </select>
-          </div>
-          <div className="mb-2">
-            <input type="text" placeholder="닉네임" value={user} onChange={e => setUser(e.target.value)} className="border p-1 rounded w-32 mr-2" />
-            <input type="number" min={1} max={5} placeholder="평점(1~5)" value={rating} onChange={e => setRating(Number(e.target.value))} className="border p-1 rounded w-24 mr-2" />
-          </div>
-          <div className="mb-2">
-            <input type="text" placeholder="사진 파일명 (예: file.svg)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="border p-1 rounded w-48 mr-2" />
-          </div>
-          <div className="mb-2">
-            <textarea placeholder="후기 내용" value={text} onChange={e => setText(e.target.value)} className="border p-1 rounded w-full" rows={2} />
-          </div>
-          <button type="submit" className="bg-blue-500 text-white px-4 py-1 rounded">후기 등록</button>
-        </form>
-
-        {/* 장소 및 후기 리스트 */}
-        {samplePlaces.map((place) => (
-          <div key={place.id} className="border rounded-lg p-4 mb-6 bg-white shadow">
-            <h2 className="text-xl font-semibold mb-2">{place.name} <span className="text-sm text-gray-500">({place.category})</span></h2>
-            <p className="text-gray-700 mb-1">{place.location}</p>
-            <p className="mb-2">{place.description}</p>
-            <div className="mb-2">
-              <strong>후기:</strong>
-              {(reviews[place.id] || []).map((review: Review) => (
-                <div key={review.id} className="border-t pt-2 mt-2">
-                  <div className="flex items-center mb-1">
-                    <img src={review.photoUrl} alt={`후기 사진 - ${review.user}`} className="w-10 h-10 rounded mr-2" />
-                    <span className="font-medium">{review.user}</span>
-                    <span className="ml-2 text-yellow-500">★ {review.rating}</span>
-                    <span className="ml-2 text-green-600 text-xs">신뢰도: {review.trustScore}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <section className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-lg font-medium mb-3">추천 장소</h2>
+              <div className="space-y-4">
+                {recommended.map(place => (
+                  <div key={place.id} className="p-3 border rounded-md hover:shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="font-semibold">{place.name}</h3>
+                        <p className="text-xs text-gray-500">{place.category} • {place.location}</p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm font-semibold">{place.avgRating.toFixed(1)} ★</div>
+                        <div className="text-xs text-gray-400">신뢰도 {place.avgTrust.toFixed(0)}</div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2">{place.description}</p>
                   </div>
-                  <p className="text-gray-800">{review.text}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-lg font-medium mb-3">장소 목록</h2>
+              <div className="space-y-4">
+                {samplePlaces.map((place) => (
+                  <div key={place.id} className="p-3 border rounded-md">
+                    <div className="flex items-start gap-4">
+                      <img src={place.reviews[0]?.photoUrl || '/file.svg'} alt={`${place.name} 대표 이미지`} className="w-16 h-16 rounded object-cover" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold">{place.name}</h3>
+                          <div className="text-sm text-gray-500">{(reviews[place.id] || []).length} 후기</div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{place.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <aside className="space-y-6">
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-lg font-medium mb-3">후기 작성</h2>
+              <form onSubmit={handleAddReview} className="space-y-3">
+                <label className="block text-sm text-gray-600">장소</label>
+                <select value={selectedPlaceId} onChange={e => setSelectedPlaceId(Number(e.target.value))} className="w-full border rounded px-2 py-1">
+                  {samplePlaces.map(place => (
+                    <option key={place.id} value={place.id}>{place.name}</option>
+                  ))}
+                </select>
+
+                <div className="flex gap-2">
+                  <input type="text" placeholder="닉네임" value={user} onChange={e => setUser(e.target.value)} className="flex-1 border rounded px-2 py-1" />
+                  <input type="number" min={1} max={5} placeholder="평점" value={rating} onChange={e => setRating(Number(e.target.value))} className="w-20 border rounded px-2 py-1" />
+                </div>
+
+                <input type="text" placeholder="사진 파일명 (예: file.svg)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="w-full border rounded px-2 py-1" />
+
+                <textarea placeholder="후기 내용을 작성해 주세요" value={text} onChange={e => setText(e.target.value)} className="w-full border rounded px-2 py-1" rows={4} />
+
+                {error && <div className="text-red-500 text-sm">{error}</div>}
+
+                <button type="submit" className="w-full bg-blue-600 text-white rounded py-2">등록</button>
+              </form>
+            </div>
+          </aside>
+        </div>
       </div>
     </main>
   );
