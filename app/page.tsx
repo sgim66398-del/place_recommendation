@@ -158,50 +158,64 @@ export default function Page() {
   const recommended = getRecommendedPlaces(reviews, samplePlaces);
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-start justify-center py-12 px-4">
-      <div className="w-full max-w-3xl">
-        <header className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-semibold">장소 추천</h1>
-          <p className="text-sm text-gray-500">솔직한 후기 기반의 간단한 추천</p>
+    <main className="min-h-screen bg-sky-50 flex items-start justify-center py-12 px-4">
+      <div className="w-full max-w-4xl">
+        {/* 상단 헤더 */}
+        <header className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="bg-white rounded-full p-2 shadow-sm">
+              <div className="w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center text-white font-bold">PR</div>
+            </div>
+            <div>
+              <div className="text-xl font-semibold">장소 추천</div>
+              <div className="text-xs text-sky-700">솔직한 후기 기반</div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <input placeholder="장소 검색" className="hidden sm:inline-block w-64 px-3 py-2 rounded-full border border-sky-200 bg-white shadow-sm focus:outline-none" />
+            <button className="bg-white text-sky-600 px-3 py-2 rounded-full shadow-sm">로그인</button>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <section className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-2xl shadow p-6">
               <h2 className="text-lg font-medium mb-3">추천 장소</h2>
               <div className="space-y-4">
                 {recommended.map(place => (
-                  <div key={place.id} className="p-3 border rounded-md hover:shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-semibold">{place.name}</h3>
-                        <p className="text-xs text-gray-500">{place.category} • {place.location}</p>
+                  <div key={place.id} className="p-4 border border-sky-100 rounded-xl hover:shadow-md flex items-start gap-4">
+                    <div className="w-14 h-14 bg-sky-100 rounded-lg flex items-center justify-center text-sky-600 font-semibold">{place.name.charAt(0)}</div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-semibold">{place.name}</h3>
+                          <p className="text-xs text-sky-600">{place.category} • {place.location}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-semibold text-sky-700">{place.avgRating.toFixed(1)} ★</div>
+                          <div className="text-xs text-sky-400">신뢰도 {place.avgTrust.toFixed(0)}</div>
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-sm font-semibold">{place.avgRating.toFixed(1)} ★</div>
-                        <div className="text-xs text-gray-400">신뢰도 {place.avgTrust.toFixed(0)}</div>
-                      </div>
+                      <p className="text-sm text-sky-600 mt-2">{place.description}</p>
                     </div>
-                    <p className="text-sm text-gray-600 mt-2">{place.description}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-2xl shadow p-6">
               <h2 className="text-lg font-medium mb-3">장소 목록</h2>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {samplePlaces.map((place) => (
-                  <div key={place.id} className="p-3 border rounded-md">
-                    <div className="flex items-start gap-4">
-                      <img src={place.reviews[0]?.photoUrl || '/file.svg'} alt={`${place.name} 대표 이미지`} className="w-16 h-16 rounded object-cover" />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-semibold">{place.name}</h3>
-                          <div className="text-sm text-gray-500">{(reviews[place.id] || []).length} 후기</div>
-                        </div>
-                        <p className="text-sm text-gray-600 mt-1">{place.description}</p>
+                  <div key={place.id} className="p-3 rounded-lg border border-sky-50 flex items-center gap-4">
+                    <img src={place.reviews[0]?.photoUrl || '/file.svg'} alt={`${place.name} 대표 이미지`} className="w-14 h-14 rounded-lg object-cover" />
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-medium text-sky-800">{place.name}</h3>
+                        <div className="text-sm text-sky-500">{(reviews[place.id] || []).length} 후기</div>
                       </div>
+                      <p className="text-sm text-sky-600 mt-1">{place.description}</p>
                     </div>
                   </div>
                 ))}
@@ -210,28 +224,28 @@ export default function Page() {
           </section>
 
           <aside className="space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-2xl shadow p-6">
               <h2 className="text-lg font-medium mb-3">후기 작성</h2>
               <form onSubmit={handleAddReview} className="space-y-3">
-                <label className="block text-sm text-gray-600">장소</label>
-                <select value={selectedPlaceId} onChange={e => setSelectedPlaceId(Number(e.target.value))} className="w-full border rounded px-2 py-1">
+                <label className="block text-sm text-sky-600">장소</label>
+                <select value={selectedPlaceId} onChange={e => setSelectedPlaceId(Number(e.target.value))} className="w-full border rounded-lg px-3 py-2">
                   {samplePlaces.map(place => (
                     <option key={place.id} value={place.id}>{place.name}</option>
                   ))}
                 </select>
 
                 <div className="flex gap-2">
-                  <input type="text" placeholder="닉네임" value={user} onChange={e => setUser(e.target.value)} className="flex-1 border rounded px-2 py-1" />
-                  <input type="number" min={1} max={5} placeholder="평점" value={rating} onChange={e => setRating(Number(e.target.value))} className="w-20 border rounded px-2 py-1" />
+                  <input type="text" placeholder="닉네임" value={user} onChange={e => setUser(e.target.value)} className="flex-1 border rounded-lg px-3 py-2" />
+                  <input type="number" min={1} max={5} placeholder="평점" value={rating} onChange={e => setRating(Number(e.target.value))} className="w-20 border rounded-lg px-3 py-2" />
                 </div>
 
-                <input type="text" placeholder="사진 파일명 (예: file.svg)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="w-full border rounded px-2 py-1" />
+                <input type="text" placeholder="사진 파일명 (예: file.svg)" value={photoUrl} onChange={e => setPhotoUrl(e.target.value)} className="w-full border rounded-lg px-3 py-2" />
 
-                <textarea placeholder="후기 내용을 작성해 주세요" value={text} onChange={e => setText(e.target.value)} className="w-full border rounded px-2 py-1" rows={4} />
+                <textarea placeholder="후기 내용을 작성해 주세요" value={text} onChange={e => setText(e.target.value)} className="w-full border rounded-lg px-3 py-2" rows={4} />
 
                 {error && <div className="text-red-500 text-sm">{error}</div>}
 
-                <button type="submit" className="w-full bg-blue-600 text-white rounded py-2">등록</button>
+                <button type="submit" className="w-full bg-sky-600 hover:bg-sky-700 text-white rounded-lg py-2">등록</button>
               </form>
             </div>
           </aside>
