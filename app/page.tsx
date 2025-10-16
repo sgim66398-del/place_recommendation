@@ -1,3 +1,5 @@
+"use client";
+
 // ...existing code...
 
 // 추천 알고리즘: 각 장소의 후기 신뢰도와 평점 평균을 계산하여 상위 2개 추천
@@ -19,6 +21,7 @@ function getRecommendedPlaces(reviews: Record<number, Review[]>, places: Place[]
   // 점수 기준 상위 2개 추천
   return scored.sort((a, b) => b.score - a.score).slice(0, 2);
 }
+
 import Image from "next/image";
 
 // 장소 데이터 모델
