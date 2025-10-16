@@ -97,6 +97,7 @@ export default function Page() {
   const [rating, setRating] = useState(5);
   const [text, setText] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Record<number, Review[]>>(() => {
     const initial: Record<number, Review[]> = {};
     samplePlaces.forEach(place => {
@@ -108,7 +109,20 @@ export default function Page() {
   // 후기 추가 핸들러
   const handleAddReview = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !text || !photoUrl) return;
+    setError(null);
+    if (!user) {
+      setError("닉네임을 입력하세요.");
+      return;
+    }
+    if (!text) {
+      setError("후기 내용을 입력하세요.");
+      return;
+    }
+    if (!photoUrl) {
+      setError("사진 파일명을 입력하세요.");
+      return;
+    }
+
     const newReview: Review = {
       id: Date.now(),
       user,
@@ -117,10 +131,20 @@ export default function Page() {
       photoUrl,
       trustScore: 90, // 기본값
     };
-    setReviews((prev: any) => ({
-      ...prev,
-      [selectedPlaceId]: [...prev[selectedPlaceId], newReview],
-    }));
+
+    setReviews((prev: Record<number, Review[]>) => {
+      const updated = { ...prev };
+      updated[selectedPlaceId] = [...(updated[selectedPlaceId] || []), newReview];
+
+      // 간단한 신뢰도 재계산: 각 리뷰의 텍스트 길이와 기존 신뢰도를 반영
+      const recalc = updated[selectedPlaceId].map(r => r.trustScore);
+      const avgTrust = recalc.reduce((s, v) => s + v, 0) / recalc.length;
+      // 각 리뷰의 trustScore를 평균으로 보정(간단화)
+      updated[selectedPlaceId] = updated[selectedPlaceId].map(r => ({ ...r, trustScore: Math.round(avgTrust) }));
+
+      return updated;
+    });
+
     setUser("");
     setRating(5);
     setText("");
@@ -182,7 +206,7 @@ export default function Page() {
               {(reviews[place.id] || []).map((review: Review) => (
                 <div key={review.id} className="border-t pt-2 mt-2">
                   <div className="flex items-center mb-1">
-                    <img src={review.photoUrl} alt="후기 사진" className="w-10 h-10 rounded mr-2" />
+                    <img src={review.photoUrl} alt={`후기 사진 - ${review.user}`} className="w-10 h-10 rounded mr-2" />
                     <span className="font-medium">{review.user}</span>
                     <span className="ml-2 text-yellow-500">★ {review.rating}</span>
                     <span className="ml-2 text-green-600 text-xs">신뢰도: {review.trustScore}</span>
